@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>INCOME PREDICTION</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/quartz/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        body {
+            background: url("/static/background.png") no-repeat center center fixed;
+            background-size: cover;
+            padding-top: 40px;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.5); 
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+        }
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+        label {
+            font-weight: 600;
+            color: #f8f9fa;
+        }
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+
+        .marquee {
+            background: rgba(250, 211, 18, 0.7);
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+            animation: marquee 10s linear infinite;
+            backdrop-filter: blur(3px);
+        }
+        select.form-control,
+        select.form-control option {
+            background-color: #2b2d30 !important;
+        color: white !important;
+}
+
+        @keyframes marquee {
+            0% {transform: translateX(100%);}
+            100% {transform: translateX(-100%);}
+        }
+        
+        .btn-primary {
+            background-color: #28a745;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .alert {
+            background-color: rgba(23, 162, 184, 0.8);
+            color: white;
+            border: none;
+            backdrop-filter: blur(5px);
+        }
+        .resultat-haut {
+            background-color: rgba(40, 167, 69, 0.8); /* vert */
+            color: white;
+            border: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .resultat-bas {
+            background-color: rgba(220, 53, 69, 0.8); /* rouge */
+            color: white;
+            border: none;
+            backdrop-filter: blur(5px);
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .footer-left,
+        .footer-center,
+        .footer-right {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .social-icon {
+            margin: 0 10px;
+            color: white;
+            font-size: 1.5em;
+            transition: transform 0.2s ease;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.2);
+            color: #f8d210;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="marquee">
+        Welcome to the Income Prediction Page!
+    </div>
+
+    <div class="container col-md-6 offset-md-3">
+        <h1>Income Estimation</h1>
+        <form id="predictionForm">
+            {% for feat in features %}
+                <div class="form-group">
+                    <label for="{{ feat }}">
+                        {% set label_map = {
+                            'age': 'Age',
+                            'workclass': 'Work Class',
+                            'fnlwgt': 'Final Weight',
+                            'education': 'Education',
+                            'education-num': 'Years of Education',
+                            'marital-status': 'Marital Status',
+                            'occupation': 'Occupation',
+                            'relationship': 'Relationship',
+                            'race': 'Race',
+                            'sex': 'Gender',
+                            'capital-gain': 'Capital Gain',
+                            'capital-loss': 'Capital Loss',
+                            'hours-per-week': 'Hours Worked per Week',
+                            'native-country': 'Native Country'
+                        } %}
+                        {{ label_map.get(feat, feat.replace('-', ' ').capitalize()) }}:
+                    </label>
+                    {% if feat in category_options %}
+                        <select class="form-control" id="{{ feat }}" name="{{ feat }}" required>
+                            <option value="">Select...</option>
+                            {% for option in category_options[feat] %}
+                                <option value="{{ option }}">{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        {% if feat == 'age' %}
+                            <input type="number" class="form-control" id="{{ feat }}" name="{{ feat }}" min="18" max="99" required 
+                                oninvalid="this.setCustomValidity('Please enter an age between 18 and 99.')"
+                                oninput="this.setCustomValidity('')">
+                        {% elif feat == 'fnlwgt' %}
+                            <input type="number" class="form-control" id="{{ feat }}" name="{{ feat }}" min="10000" required 
+                                oninvalid="this.setCustomValidity('Please enter a value greater than 10,000.')"
+                                oninput="this.setCustomValidity('')">
+                        {% elif feat == 'education-num' %}
+                            <input type="number" class="form-control" id="{{ feat }}" name="{{ feat }}" min="1" max="20" required 
+                                oninvalid="this.setCustomValidity('Please enter a level between 1 and 20.')"
+                                oninput="this.setCustomValidity('')">
+                        {% elif feat == 'capital-gain' or feat == 'capital-loss' %}
+                            <input type="number" class="form-control" id="{{ feat }}" name="{{ feat }}" min="0" required 
+                                oninvalid="this.setCustomValidity('Please enter a gain or loss ≥ 0.')"
+                                oninput="this.setCustomValidity('')">
+                        {% elif feat == 'hours-per-week' %}
+                            <input type="number" class="form-control" id="{{ feat }}" name="{{ feat }}" min="1" max="168" required 
+                                oninvalid="this.setCustomValidity('Please enter a number of hours between 1 and 168.')"
+                                oninput="this.setCustomValidity('')">
+                        {% else %}
+                            <input type="number" class="form-control" id="{{ feat }}" name="{{ feat }}" step="any" required 
+                                oninvalid="this.setCustomValidity('Please enter a valid value.')"
+                                oninput="this.setCustomValidity('')">
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="d-flex gap-3 mt-3">
+                <button class="btn btn-primary flex-fill" type="submit">Predict</button>
+                <button class="btn btn-secondary flex-fill" type="button" id="resetBtn">Reset</button>
+            </div>
+        </form>
+
+        <div id="resultat" class="alert alert-info mt-4" style="display: none;"></div>
+    
+    </div>
+
+    <script>
+        // Intercepter le formulaire
+        document.getElementById("predictionForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const formJSON = Object.fromEntries(formData.entries());
+
+            const response = await fetch("/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formJSON)
+            });
+
+            const data = await response.json();
+            const resultatDiv = document.getElementById("resultat");
+
+            // Nettoyage des anciennes classes
+            resultatDiv.classList.remove("resultat-haut", "resultat-bas");
+
+            // Appliquer le texte
+            resultatDiv.innerText = "Résultat : " + data.resultat;
+            resultatDiv.style.display = "block";
+
+            // Appliquer la bonne classe selon le résultat
+            if (data.resultat.includes("greater")) {
+                resultatDiv.classList.add("resultat-haut");
+            } else {
+                resultatDiv.classList.add("resultat-bas");
+            }
+
+        });
+
+        // Réinitialiser le formulaire
+        document.getElementById("resetBtn").addEventListener("click", function () {
+            const form = document.getElementById("predictionForm");
+            form.reset();
+            document.getElementById("resultat").style.display = "none";
+        });
+    </script>
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content container">
+                <div class="footer-left">
+                    <p>&copy; 2025 | Built by <strong>AÏFA, MAHOUVI, SABI, SIMIYAKI</strong></p>
+                </div>
+
+                <div class="footer-center">
+                    
+                    <p><a href="apropos" style="color: #f8d210;"><i class="fas fa-info-circle"></i> About</a></p>
+                </div>
+
+                <div class="footer-right">
+                    <a href="https://www.linkedin.com/in/aristidina-a%C3%AFfa-1bab75287" target="_blank" class="social-icon">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:aristidinaifa@gmail.com" class="social-icon">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+
+        
+<!-- Audio players -->
+<audio id="soundLow" src="{{ url_for('static', filename='audio/low_income.mp3') }}"></audio>
+<audio id="soundHigh" src="{{ url_for('static', filename='audio/high_income.mp3') }}"></audio>
+
+<script>
+document.getElementById("predictionForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((val, key) => { data[key] = val; });
+
+    fetch("/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        
+
+        
+        if (res.resultat.includes("greater")) {
+            document.getElementById("soundLow").play();
+        } else {
+            document.getElementById("soundHigh").play();
+        }
+    })
+    .catch(err => {
+        console.error("Erreur : ", err);
+    });
+});
+</script>
+        
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About the Project</title>
+  <link rel="stylesheet" href="styles.css"> 
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #19321c, #010002);
+      color: #f3f3f3;
+      margin: 0;
+      padding: 2rem;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      color: #f8d210;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      color: #f1c40f;
+      border-bottom: 1px solid #555;
+      padding-bottom: 0.3rem;
+      margin-top: 2rem;
+    }
+    p, ul {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    ul {
+      list-style-type: "🔹 ";
+      padding-left: 1.5rem;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    a {
+      color: #f8d210;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>About the Project</h1>
+    <p>Income prediction project developed as part of Machine Learning 2</p>
+  </header>
+
+  <section>
+    <h2>Project Objective</h2>
+    <p>
+      This project involves coding, applying, and designing a multilayer perceptron from scratch. The resulting application is a web app capable of predicting individual income based on demographic and professional features. It serves as a decision-support tool for public policy makers, financial institutions, and HR services.
+    </p>
+  </section>
+
+  <section>
+    <h2>Main Features</h2>
+    <ul>
+      <li>Loading user data through a form</li>
+      <li>Income prediction using a custom-built MLP</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Technologies & Resources</h2>
+    <ul>
+      <li>Python (Pandas, Numpy)</li>
+      <li>Flask for backend web framework</li>
+      <li>HTML/CSS and JavaScript for the interface</li>
+      <li>Adult income dataset from Kaggle: <a href="https://www.kaggle.com/datasets/wenruliu/adult-income-dataset"> </a></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Other Project Elements</h2>
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Team Members</h2>
+    <ul>
+        <li>AÏFA Aristidina - <a href="mailto:aristidinaifa@gmail.com" style="color: #f8d210;">aristidinaifa@gmail.com</a></li>
+        <li>MAHOUVI Diane - <a href="mailto:mahouvidiane@gmail.com" style="color: #f8d210;">mahouvidiane@gmail.com</a></li>
+        <li>SABI Bani Guiguiri - <a href="mailto:simiyakiphilippe@gmail.com" style="color: #f8d210;">simiyakiphilippe@gmail.com</a></li>
+        <li>SIMIYAKI Philippe</li>
+    </ul>
+  </section>
+
+  <section class="back-link">
+    <a href="{{ url_for('index') }}">⬅ Back to Home Page</a>
+  </section>
+</body>
+</html>
